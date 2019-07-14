@@ -30,13 +30,8 @@ export default class VoronoiGenerator {
     };
 
     drawFoci() {
-        this.clearCanvas();
         this.foci.forEach(focus => {
             focus.draw();
         });
-    };
-
-    clearCanvas() {
-        // TODO
     };
 }
