@@ -4,7 +4,7 @@
   "description": "An in-browser voronoi cell generator",
   "main": "main.js",
   "scripts": {
-    "build": "tsc && npx webpack --config webpack.config.js"
+    "build": "tsc && npx webpack --config webpack.config.js --mode=production"
   },
   "keywords": [
     "voronoi"
@@ -14,5 +14,8 @@
   "devDependencies": {
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5"
+  },
+  "dependencies": {
+    "d3-delaunay": "^5.1.3"
   }
 }

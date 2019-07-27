@@ -1,37 +1,40 @@
-import Focus from './focus';
+import FocusCollection from './focusCollection';
+import {Delaunay} from "d3-delaunay";
 
 export default class VoronoiGenerator {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
-    foci: Focus[];
+    foci: FocusCollection;
     constructor() {
-        this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        this.canvas =
+            document.getElementById("canvas") as HTMLCanvasElement;
         this.ctx = this.canvas.getContext("2d");
-        this.foci = [];
+        this.foci = new FocusCollection();
     }
 
     start() {
         this.canvas.height = window.innerHeight;
         this.canvas.width = window.innerWidth;
-        this.generateFoci();
-        this.drawFoci();
-    };
+        this.foci.generateRandomFociWithinWindow();
+        const delaunay = Delaunay.from(
+            this.foci.toPrimitiveArray()
+        );
 
-    generateFoci() {
-        const area = this.canvas.height * this.canvas.width;
-        const pointCount = Math.floor(area / 100000);
-        for (let i = 0; i < pointCount; i++) {
-            this.generateFocus();
+        const voronoi = delaunay.voronoi(
+            [0, 0, window.innerWidth, window.innerHeight]
+        );
+
+        for (let i = 0; i < this.foci.collection.length; i++) {
+            this.ctx.beginPath();
+            voronoi.renderCell(i, this.ctx);
+            this.ctx.fillStyle = "hsl(" + (360 * Math.random()) + ", 100%, 50%)";
+            this.ctx.fill();
+            this.ctx.stroke();
         }
-    };
 
-    generateFocus() {
-        this.foci.push(new Focus(this.canvas));
-    };
-
-    drawFoci() {
-        this.foci.forEach(focus => {
-            focus.draw();
-        });
+        this.ctx.beginPath();
+        delaunay.renderPoints(this.ctx);
+        this.ctx.fillStyle = "black";
+        this.ctx.fill();
     };
 }
