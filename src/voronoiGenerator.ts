@@ -13,13 +13,16 @@ export default class VoronoiGenerator {
     }
 
     start() {
+        this.foci.generateRandomFociWithinWindow();
+        this.tick();
+    };
+
+    draw() {
         this.canvas.height = window.innerHeight;
         this.canvas.width = window.innerWidth;
-        this.foci.generateRandomFociWithinWindow();
         const delaunay = Delaunay.from(
             this.foci.toPrimitiveArray()
         );
-
         const voronoi = delaunay.voronoi(
             [0, 0, window.innerWidth, window.innerHeight]
         );
@@ -27,7 +30,7 @@ export default class VoronoiGenerator {
         for (let i = 0; i < this.foci.collection.length; i++) {
             this.ctx.beginPath();
             voronoi.renderCell(i, this.ctx);
-            this.ctx.fillStyle = "hsl(" + (360 * Math.random()) + ", 100%, 50%)";
+            this.ctx.fillStyle = this.foci.collection[i].color;
             this.ctx.fill();
             this.ctx.stroke();
         }
@@ -36,5 +39,11 @@ export default class VoronoiGenerator {
         delaunay.renderPoints(this.ctx);
         this.ctx.fillStyle = "black";
         this.ctx.fill();
-    };
+    }
+
+    tick() {
+        setTimeout(() => this.tick(), 20);
+        this.draw();
+        this.foci.step();
+    }
 }

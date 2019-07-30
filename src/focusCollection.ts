@@ -8,7 +8,7 @@ export default class FocusCollection {
 
     generateRandomFociWithinWindow() {
         const area = window.innerWidth * window.innerHeight;
-        const pointCount = Math.floor(area / 100000);
+        const pointCount = Math.floor(area / 20000);
         for (let i = 0; i < pointCount; i++) {
             this.collection.push(new Focus(
                 window.innerWidth * Math.random(),
@@ -19,5 +19,9 @@ export default class FocusCollection {
 
     toPrimitiveArray() {
         return this.collection.map(focus => [focus.x, focus.y]);
+    }
+
+    step() {
+        this.collection.forEach(focus => focus.step());
     }
 }
