@@ -1,9 +1,7 @@
 export default class Focus {
     public heading: number;
-    public color: string;
     constructor(public x: number, public y: number) {
         this.heading = Math.random() * 2 * Math.PI;
-        this.color = "hsl(" + (360 * Math.random()) + ", 100%, 50%)";
     }
 
     public step() {

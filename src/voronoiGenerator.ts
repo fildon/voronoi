@@ -30,7 +30,7 @@ export default class VoronoiGenerator {
         for (let i = 0; i < this.foci.collection.length; i++) {
             this.ctx.beginPath();
             voronoi.renderCell(i, this.ctx);
-            this.ctx.fillStyle = this.foci.collection[i].color;
+            this.ctx.fillStyle = this.colorOfPolygon(voronoi.cellPolygon(i));
             this.ctx.fill();
             this.ctx.stroke();
         }
@@ -45,5 +45,29 @@ export default class VoronoiGenerator {
         setTimeout(() => this.tick(), 20);
         this.draw();
         this.foci.step();
+    }
+
+    colorOfPolygon(poly) {
+        let area = this.areaOfPolygon(poly);
+        let normalisedArea = Math.min(area / 40000, 1);
+        let hue = 230 - 230 * normalisedArea; // 230 is 'blue'
+        let saturation = 200 * Math.abs(normalisedArea - 0.5) + "%";
+        let lightness = 100 * Math.abs(normalisedArea - 0.5) + "%";
+        return "hsl(" + hue + ", " + saturation + ", " + lightness + ")";
+    }
+
+    areaOfPolygon(poly) {
+        // https://www.mathopenref.com/coordpolygonarea.html
+        if (!poly.length) {
+            return null;
+        }
+        let result = 0;
+        for (let i = 0; i < poly.length - 1; i++) {
+            result += ((poly[i][0] * poly[i+1][1])
+                - (poly[i][1] * poly[i+1][0]));
+        }
+        result += ((poly[poly.length - 1][0] * poly[0][1])
+            - (poly[poly.length - 1][1] * poly[0][0]));
+        return Math.abs(result) / 2;
     }
 }
