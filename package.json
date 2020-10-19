@@ -12,7 +12,7 @@
   "author": "Rupert Foggo McKay",
   "license": "ISC",
   "devDependencies": {
-    "webpack": "^5.1.0",
+    "webpack": "^5.1.3",
     "webpack-cli": "^4.0.0"
   },
   "dependencies": {
